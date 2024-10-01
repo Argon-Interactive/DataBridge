@@ -1,41 +1,30 @@
 package main
 
 import (
+	"DataBridge/database"
+	"DataBridge/config"
+
 	"fmt"
-	"database/sql"
 	"net/http"
 	"github.com/labstack/echo/v4"
 )
 
-func initDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "./server.db")
-	if err != nil { return nil, err }
-
-	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS users (
-		id INTIGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL
-		)
-		`)
-	if err != nil { return nil, err }
-	return db, nil
-}
 
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello from Web")
 }
 
 func main() {
-	fmt.Println("This compiles at least")
 	e := echo.New()
+	cfg, _ := cfg.GetConfig("config.env") //This may need a better error handeling but I don't know go good enough to implement it
 
-	db, err := initDB()
+	db, err := dbmgr.InitDB()
 	if err != nil {
 		fmt.Println("Error initializing database: ", err)
 		return
 	}
 	defer db.Close()
 
-	e.GET("/", hello)
-	e.Logger.Fatal(e.Start(":8000"))
+	e.GET("/test", hello)
+	e.Logger.Fatal(e.Start(":" + cfg.ServerPort))
 }
