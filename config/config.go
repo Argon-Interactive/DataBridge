@@ -15,7 +15,7 @@ type Config struct {
 func GetConfig(filepath string) (Config, error) {
 	err := godotenv.Load(filepath)
 	if err != nil {
-		log.Printf("ERROR: Couldn't load .env file: %s", err)
+		log.Panicf("ERROR: Couldn't load .env file: %s", err)
 	}
 	return Config {
 		ServerPort: os.Getenv("SERVER_PORT"),

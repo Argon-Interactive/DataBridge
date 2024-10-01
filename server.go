@@ -16,7 +16,7 @@ func hello(c echo.Context) error {
 
 func main() {
 	e := echo.New()
-	cfg, _ := cfg.GetConfig("config.env") //This may need a better error handeling but I don't know go good enough to implement it
+	cfg, _ := cfg.GetConfig(".env")
 
 	db, err := dbmgr.InitDB()
 	if err != nil {
