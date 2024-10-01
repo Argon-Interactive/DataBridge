@@ -3,8 +3,8 @@ package main
 import (
 	"DataBridge/database"
 	"DataBridge/config"
+	"DataBridge/handlers"
 
-	"fmt"
 	"net/http"
 	"github.com/labstack/echo/v4"
 )
@@ -16,15 +16,14 @@ func hello(c echo.Context) error {
 
 func main() {
 	e := echo.New()
-	cfg, _ := cfg.GetConfig(".env")
+	cfg.InitConfig(".env")
 
-	db, err := dbmgr.InitDB()
-	if err != nil {
-		fmt.Println("Error initializing database: ", err)
-		return
-	}
-	defer db.Close()
+	dbmgr.InitDB()
+	defer dbmgr.CloseDB()
 
-	e.GET("/test", hello)
-	e.Logger.Fatal(e.Start(":" + cfg.ServerPort))
+	e.POST("/register", hlrs.RegisterHandler)
+	e.POST("/login", hlrs.LoginHandler)
+	e.GET("/", hello)
+
+	e.Logger.Fatal(e.Start(":" + cfg.GetConfig().ServerPort))
 }

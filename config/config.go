@@ -7,18 +7,22 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Config struct {
+type config struct {
 	ServerPort	string	
 	JWTKey		string
 }
 
-func GetConfig(filepath string) (Config, error) {
+var cfg config
+
+func InitConfig(filepath string) {
 	err := godotenv.Load(filepath)
-	if err != nil {
-		log.Panicf("ERROR: Couldn't load .env file: %s", err)
-	}
-	return Config {
+	if err != nil { log.Panicf("ERROR: Couldn't load .env file: %s", err) }
+	cfg = config {
 		ServerPort: os.Getenv("SERVER_PORT"),
 		JWTKey: os.Getenv("JWT_KEY"),
-	}, nil
+	}
+}
+
+func GetConfig() config {
+	return cfg
 }
