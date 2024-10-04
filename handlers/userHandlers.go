@@ -28,8 +28,8 @@ func LoginHandler(c echo.Context) error {
 }
 
 func RegisterHandler(c echo.Context) error {
-	username := c.QueryParam("name")
-	password := c.QueryParam("password")
+	username := c.FormValue("name")
+	password := c.FormValue("password")
 
 	err := dbmgr.CreateUser(username, password)
 	if err != nil { return c.JSON(http.StatusBadRequest, map[string]string{"message":err.Error()}) }

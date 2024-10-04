@@ -9,12 +9,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-
 func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello from Web")
 }
 
 func main() {
+
 	e := echo.New()
 	cfg.InitConfig(".env")
 
