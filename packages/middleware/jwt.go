@@ -1,7 +1,7 @@
 package mdlwr
 
 import (
-	"DataBridge/config"
+	"DataBridge/packages/config"
 	"fmt"
 	"time"
 

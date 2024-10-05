@@ -1,8 +1,8 @@
 package main
 
 import (
-	"DataBridge/config"
-	"DataBridge/console"
+	"DataBridge/packages/config"
+	"DataBridge/packages/console"
 )
 
 func main() {

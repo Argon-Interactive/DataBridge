@@ -1,8 +1,8 @@
 package server
 
 import (
-	"DataBridge/config"
-	"DataBridge/database"
+	"DataBridge/packages/config"
+	"DataBridge/packages/database"
 	"context"
 	"fmt"
 	"sync/atomic"

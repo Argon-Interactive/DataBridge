@@ -1,8 +1,8 @@
 package console
 
 import (
-	cfg "DataBridge/config"
-	"DataBridge/server"
+	"DataBridge/packages/config"
+	"DataBridge/packages/server"
 	"fmt"
 )
 

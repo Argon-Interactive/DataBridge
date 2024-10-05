@@ -1,8 +1,8 @@
 package hlrs
 
 import (
-	"DataBridge/database"
-	mdlwr "DataBridge/middleware"
+	"DataBridge/packages/database"
+	"DataBridge/packages/middleware"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

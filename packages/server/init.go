@@ -1,8 +1,8 @@
 package server
 
 import (
-	"DataBridge/handlers"
-	"DataBridge/middleware"
+	"DataBridge/packages/handlers"
+	"DataBridge/packages/middleware"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

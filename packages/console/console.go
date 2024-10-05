@@ -1,7 +1,7 @@
 package console
 
 import (
-	"DataBridge/server"
+	"DataBridge/packages/server"
 	"bufio"
 	"fmt"
 	"os"
