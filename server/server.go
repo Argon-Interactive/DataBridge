@@ -12,20 +12,35 @@ import (
 )
 
 var echoCtx* echo.Echo
-var serverState int32
+var status int32
 
-func RunServer() {
+func RunHTTPSServer() {
 	if IsRunning() { fmt.Println("Server is already running. Ignoring."); return }
-	serverState = 0
+	setStatus(Stoped)
 	dbmgr.InitDB()
 	echoCtx = echo.New()
 	initServer()
 	go func() { 
-		setRunning(true)
+		setStatus(RunningHTTPS)
+		fmt.Printf("Server is running on port: %s\n", cfg.GetConfig().ServerPort)
+		echoCtx.StartTLS(":" + cfg.GetConfig().ServerPort, "server.crt", "server.key");
+		fmt.Println("Server has shut down.")
+		setStatus(Stoped)
+	}()
+}
+
+func RunHTTPServer() {
+	if IsRunning() { fmt.Println("Server is already running. Ignoring."); return }
+	setStatus(Stoped)
+	dbmgr.InitDB()
+	echoCtx = echo.New()
+	initServer()
+	go func() { 
+		setStatus(RunningHTTP)
 		fmt.Printf("Server is running on port: %s\n", cfg.GetConfig().ServerPort)
 		echoCtx.Start(":" + cfg.GetConfig().ServerPort);
 		fmt.Println("Server has shut down.")
-		setRunning(false)
+		setStatus(Stoped)
 	}()
 }
 
@@ -37,5 +52,14 @@ func KillServer() {
 	dbmgr.CloseDB()
 }
 
-func IsRunning() bool { atomic.LoadInt32(&serverState); return serverState == 1 }
-func setRunning(b bool) { var i int32; i = 0; if(b) { i = 1 }; atomic.StoreInt32(&serverState, i) } 
+type serverStatus int32
+
+const (
+	Stoped serverStatus = iota
+	RunningHTTP
+	RunningHTTPS
+)
+
+func GetStatus() serverStatus { atomic.LoadInt32(&status); return serverStatus(status) }
+func IsRunning() bool { return GetStatus() != Stoped }
+func setStatus(s serverStatus) { atomic.StoreInt32(&status, int32(s)) } 

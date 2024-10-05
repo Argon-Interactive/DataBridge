@@ -23,11 +23,13 @@ func RunInterface() {
 	for {
 		command := strings.ToLower(<-input)
 		switch command {
-		case "start": server.RunServer()
+		case "run": server.RunHTTPServer()
+		case "run-s": server.RunHTTPSServer()
 		case "stop": server.KillServer()
-		case "restart": if !server.IsRunning() { fmt.Println("Server is not running"); break}; server.KillServer(); server.RunServer()
+		case "restart": restart()
 		case "help": printHelp()
 		case "status": printStatus()
+		case "test": test()
 		case "exit": close(quit); server.KillServer(); return
 		default: fmt.Println("Unknown command. Type \"help\" for a list of commands.")
 		}
