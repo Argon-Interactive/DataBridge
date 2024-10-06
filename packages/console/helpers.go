@@ -2,18 +2,21 @@ package console
 
 import (
 	"DataBridge/packages/config"
+	"DataBridge/packages/database"
 	"DataBridge/packages/server"
 	"fmt"
+	"strconv"
 )
 
 
 var helpStr = []string{
-	"run: Starts the HTTP server", 
-	"run-s: Starts the HTTPS server", 
+	"run / r: Starts the HTTP server", 
+	"run-s / r-s: Starts the HTTPS server", 
 	"stop: Stops the server",
 	"restart: Restarts the server",
 	"status: Logs the servers status",
-	"exit: Exits the program",
+	"clr: Clears the terminal",
+	"quit / q: Exits the program",
 }
 
 func printHelp() { for _, str := range helpStr { fmt.Println(str) } }
@@ -23,6 +26,7 @@ func printStatus() {
 		var protocol string
 		if server.GetStatus() == server.RunningHTTPS { protocol = "HTTPS" } else { protocol = "HTTP" }
 		fmt.Printf("%s Server is running on port: %s\n", protocol, cfg.GetConfig().ServerPort)
+		fmt.Println("Logged in users: " + strconv.Itoa(dbmgr.GetLoggedAmount()))
 		return
 	}
 	fmt.Println("Server is not running")

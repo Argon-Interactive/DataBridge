@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func LoginHandler(c echo.Context) error {
+func Login(c echo.Context) error {
 	username := c.FormValue("name")
 	password := c.FormValue("password")
 
@@ -18,7 +18,19 @@ func LoginHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{"authtoken":authToken, "refreshtoken":refreshToken})
 }
 
-func RegisterHandler(c echo.Context) error {
+func Logout(c echo.Context) error {
+	token := c.FormValue("token")
+
+	name, err := mdlwr.ValidateAuthJWT(token)
+	if err != nil { return err.JSON(c) }
+
+	err = dbmgr.Logout(name)
+	if err != nil { return err.JSON(c) }
+
+	return c.JSON(http.StatusOK, map[string]string{"message":"User logout successfully"})
+}
+
+func Register(c echo.Context) error {
 	username := c.FormValue("name")
 	password := c.FormValue("password")
 
@@ -29,8 +41,39 @@ func RegisterHandler(c echo.Context) error {
 }
 
 func Refresh(c echo.Context) error {
-	refToken := c.FormValue("refreshtoken")
-	authToken, refreshToken, err := mdlwr.RefreshJWT(refToken)
+	token := c.FormValue("token")
+
+	name, err := mdlwr.ValidateRefreshJWT(token)
 	if err != nil { return err.JSON(c) }
+
+	authToken, refreshToken, err := dbmgr.Refresh(name)
+	if err != nil { return err.JSON(c) }
+
 	return c.JSON(http.StatusOK, map[string]string{"authtoken":authToken, "refreshtoken":refreshToken})
+}
+
+func ChangeName(c echo.Context) error {
+	token := c.FormValue("token")
+	newName := c.FormValue("name")
+
+	name, err := mdlwr.ValidateAuthJWT(token)
+	if err != nil { return err.JSON(c) }
+
+	authToken, refreshToken, err := dbmgr.ChangeUsername(name, newName)
+	if err != nil { return err.JSON(c) }
+
+	return c.JSON(http.StatusOK, map[string]string{"authtoken":authToken, "refreshtoken":refreshToken})
+}
+
+func ChangePassword(c echo.Context) error {
+	token := c.FormValue("token")
+	password := c.FormValue("password")
+
+	name, err := mdlwr.ValidateAuthJWT(token)
+	if err != nil { return err.JSON(c) }
+
+	err = dbmgr.ChangePassword(name, password)
+	if err != nil { return err.JSON(c) }
+
+	return c.JSON(http.StatusOK, map[string]string{"message":"Password changed successfully"})
 }
