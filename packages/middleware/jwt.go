@@ -3,12 +3,12 @@ package mdlwr
 import (
 	"DataBridge/packages/config"
 	"DataBridge/packages/database"
-	cerr "DataBridge/packages/error"
+	"DataBridge/packages/error"
 	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type emptyError struct {}
